@@ -1,0 +1,67 @@
+@RELATION artificialMelody
+
+
+            @ATTRIBUTE pitch0 NUMERIC
+                @ATTRIBUTE duration0 NUMERIC
+                @ATTRIBUTE pitch1 NUMERIC
+                @ATTRIBUTE duration1 NUMERIC
+                @ATTRIBUTE pitch2 NUMERIC
+                @ATTRIBUTE duration2 NUMERIC
+                @ATTRIBUTE pitch3 NUMERIC
+                @ATTRIBUTE duration3 NUMERIC
+                @ATTRIBUTE pitch4 NUMERIC
+                @ATTRIBUTE duration4 NUMERIC
+                @ATTRIBUTE pitch5 NUMERIC
+                @ATTRIBUTE duration5 NUMERIC
+                @ATTRIBUTE pitch6 NUMERIC
+                @ATTRIBUTE duration6 NUMERIC
+                @ATTRIBUTE pitch7 NUMERIC
+                @ATTRIBUTE duration7 NUMERIC
+                @ATTRIBUTE pitch8 NUMERIC
+                @ATTRIBUTE duration8 NUMERIC
+                @ATTRIBUTE pitch9 NUMERIC
+                @ATTRIBUTE duration9 NUMERIC
+                @ATTRIBUTE pitch10 NUMERIC
+                @ATTRIBUTE duration10 NUMERIC
+                @ATTRIBUTE pitch11 NUMERIC
+                @ATTRIBUTE duration11 NUMERIC
+                @ATTRIBUTE pitch12 NUMERIC
+                @ATTRIBUTE duration12 NUMERIC
+                @ATTRIBUTE pitch13 NUMERIC
+                @ATTRIBUTE duration13 NUMERIC
+                @ATTRIBUTE pitch14 NUMERIC
+                @ATTRIBUTE duration14 NUMERIC
+                @ATTRIBUTE pitch15 NUMERIC
+                @ATTRIBUTE duration15 NUMERIC
+                @ATTRIBUTE pitch16 NUMERIC
+                @ATTRIBUTE duration16 NUMERIC
+                @ATTRIBUTE pitch17 NUMERIC
+                @ATTRIBUTE duration17 NUMERIC
+                @ATTRIBUTE pitch18 NUMERIC
+                @ATTRIBUTE duration18 NUMERIC
+                @ATTRIBUTE pitch19 NUMERIC
+                @ATTRIBUTE duration19 NUMERIC
+                @ATTRIBUTE pitch20 NUMERIC
+                @ATTRIBUTE duration20 NUMERIC
+                @ATTRIBUTE pitch21 NUMERIC
+                @ATTRIBUTE duration21 NUMERIC
+                @ATTRIBUTE pitch22 NUMERIC
+                @ATTRIBUTE duration22 NUMERIC
+                @ATTRIBUTE pitch23 NUMERIC
+                @ATTRIBUTE duration23 NUMERIC
+                @ATTRIBUTE pitch24 NUMERIC
+                @ATTRIBUTE duration24 NUMERIC
+                @ATTRIBUTE score NUMERIC
+
+@DATA
+19,60,37,180,19,60,37,180,28,240,43,240,43,60,45,180,45,60,45,60,45,60,45,60,47,240,19,60,37,180,0.5
+24,166,14,333,24,166,14,333,24,166,14,333,24,166,14,333,24,166,14,333,16,666,25,666,22,333,24,166,14,333,0.5
+16,750,16,375,14,187,15,375,14,187,29,750,22,280,22,93,15,375,14,187,24,187,13,187,22,187,13,187,19,187,0.5
+24,375,29,750,31,375,33,375,29,750,24,375,24,375,29,750,31,375,33,375,29,750,25,375,24,375,29,750,31,375,0.75
+34,133,25,133,34,267,36,133,25,133,36,267,34,133,25,133,36,535,25,535,34,267,36,267,26,535,36,535,34,400,0.5
+36,214,36,214,36,428,34,214,34,214,34,428,36,1714,36,428,36,428,34,428,34,428,34,1714,34,214,36,214,36,428,0.0
+31,333,19,166,19,333,13,499,17,333,19,333,21,333,13,333,17,333,16,166,13,166,19,333,19,166,19,333,13,499,0.25
+29,187,31,187,31,187,34,187,33,187,31,187,31,187,29,187,29,187,31,187,31,187,34,187,33,187,31,187,31,187,1.0
+29,240,29,120,29,120,25,240,29,240,25,120,29,120,25,240,29,240,29,240,16,240,16,120,16,120,25,240,16,240,1.0
+16,375,15,375,15,375,14,375,16,375,14,375,15,375,14,375,16,250,14,250,14,250,15,375,15,187,14,187,14,1400,0.25
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,?
