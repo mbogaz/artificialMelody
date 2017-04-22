@@ -1,12 +1,13 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Test {
 
     public static void main(String[] args) throws Exception {
-        Random r = new Random();
-        for (int i=0;i<100;i++)
-            System.out.println(r.nextInt(6));
+        for (int i = 0; i < 100; i++) {
+            int selection = (int) Math.round(Math.random() * 10);
+            System.out.println(selection);
+        }
+
     }
     public boolean solution(String S, String T) {
         ArrayList<Character> listS = new ArrayList<Character>();

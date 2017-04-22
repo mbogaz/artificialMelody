@@ -20,17 +20,21 @@ public class DBClass {
 
     public static void main(String[] args){
         DBClass db = new DBClass();
-        ArrayList<ScoredMelody> list  = db.getData();
+        ArrayList<ScoredMelody> list  = db.getData(0);
         db.makeArff(list);
     }
 
-    public ArrayList<ScoredMelody> getData() {
+    public ArrayList<ScoredMelody> getData(int limit) {
         ArrayList<ScoredMelody> list = new ArrayList<ScoredMelody>();
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             Connection conn = DriverManager.getConnection("jdbc:mysql://93.89.225.82:3306/fbgartif_artificialmelody", "fbgartif_mahmut", "12119885768");
             Statement komut = conn.createStatement();
-            ResultSet rs = komut.executeQuery(Variables.selected);
+            String querry = Variables.selected;
+            if(limit != 0){
+                querry = querry+ " LIMIT "+limit;
+            }
+            ResultSet rs = komut.executeQuery(querry);
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
@@ -43,7 +47,7 @@ public class DBClass {
                     if(i==1)
                         name=columnValue;
                     else if(i==2)
-                        score=Integer.parseInt(columnValue);
+                        score=Double.parseDouble(columnValue);
                     else if(i==3)
                         content = columnValue;
                     else if(i==4)
@@ -85,35 +89,7 @@ public class DBClass {
             writer.println("    @ATTRIBUTE score NUMERIC");
             writer.println();
             writer.println("@DATA");
-            for (ScoredMelody sm : list){
-                //System.out.println(sm.getContent());
-                tempSM = sm;
-                if(sm.getContent().equals(""))continue;
-                int[] notes = new int[Variables.inputLenght];
-                int[] durations = new int[Variables.inputLenght];
-                for(int i=0;i<Variables.inputLenght;i++){notes[i]=0;durations[i]=0;}
-                int d=0,b=0,o=0; double score=0;
-                String data = sm.getContent().split(":")[1];
-                String[] data1 = data.split(",");
-                d=Integer.parseInt(data1[0].split("=")[1]);
-                b=Integer.parseInt(data1[2].split("=")[1]);
-                o=Integer.parseInt(data1[1].split("=")[1]);
-                //writer.print(sm.getContent().split(":")[0]+","); //file adını yazıyor
-                score = sm.calculateScore();
-                String line = sm.getId()+",";
-                String arr[] = sm.getContent().split(":");
-                if(arr.length<3)continue;
-                String iters[] = arr[2].split(",");
-                for(int i=0;i<Variables.inputLenght && i<iters.length;i++){
-                    bb=60000/b;
-                    notes[i]=parseNode(iters[i],d,o);
-                    durations[i]=bb;
-                }
-                for(int i=0;i<Variables.inputLenght;i++){line=line+notes[i]+","+durations[i];
-                    if(i<(Variables.inputLenght-1))line=line+",";}
-                line = line+","+score;
-                writer.println(line);
-            }
+            writer.print(listToString(list,false));
 
             writer.close();
             Path currentRelativePath = Paths.get("");
@@ -123,6 +99,49 @@ public class DBClass {
             // do something
         }
     }
+
+    public String listToString(ArrayList<ScoredMelody> list,boolean forGeneric) {
+        String result="";
+        for (ScoredMelody sm : list){
+            //System.out.println(sm.getContent());
+            tempSM = sm;
+            if(sm.getContent().equals(""))continue;
+            int[] notes = new int[Variables.inputLenght];
+            int[] durations = new int[Variables.inputLenght];
+            for(int i=0;i<Variables.inputLenght;i++){notes[i]=0;durations[i]=0;}
+            int d=0,b=0,o=0; double score=0;
+            String data = sm.getContent().split(":")[1];
+            String[] data1 = data.split(",");
+            d=Integer.parseInt(data1[0].split("=")[1]);
+            b=Integer.parseInt(data1[2].split("=")[1]);
+            o=Integer.parseInt(data1[1].split("=")[1]);
+            //writer.print(sm.getContent().split(":")[0]+","); //file adını yazıyor
+            String line = "";
+            if(!forGeneric) {
+                score = sm.calculateScore();
+                line = sm.getId() + ",";
+            }
+            String arr[] = sm.getContent().split(":");
+            if(arr.length<3)continue;
+            String iters[] = arr[2].split(",");
+            for(int i=0;i<Variables.inputLenght && i<iters.length;i++){
+                bb=60000/b;
+                notes[i]=parseNode(iters[i],d,o);
+                durations[i]=bb;
+            }
+            for(int i=0;i<Variables.inputLenght;i++){
+                line=line+notes[i]+","+durations[i];
+                if(i<(Variables.inputLenght-1))line=line+",";
+            }
+            if(!forGeneric)
+                line = line+","+score;
+            else
+                line = line+",?";
+            result += line+"\n";
+        }
+        return result;
+    }
+
     public int parseNode(String text,int d,int o){
         int val = 0;
         text = text.toLowerCase();
@@ -180,7 +199,10 @@ public class DBClass {
         else if(values.length == 1){
             if(text.substring(0,key.length()).equals(key)){//octav ve nota
                 updateBB(d,isDot);
-                return mult+((Integer.parseInt(values[0])-4)*12);
+                int tempOctave = Integer.parseInt(values[0]);
+                if(tempOctave>7 || tempOctave<4)
+                    tempOctave = o;
+                return mult+((tempOctave-4)*12);
             }
             else{//uzunluk ve nota
                 d=Integer.parseInt(values[0]);
@@ -195,7 +217,10 @@ public class DBClass {
                         " text:"+tempSM);
             }
             updateBB(d,isDot);
-            return mult+((Integer.parseInt(values[1])-4)*12);
+            int tempOctave = Integer.parseInt(values[1]);
+            if(tempOctave>7 || tempOctave<4)
+                tempOctave = o;
+            return mult+(tempOctave-4)*12;
         }
         return 0;
     }
