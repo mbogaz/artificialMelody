@@ -3,11 +3,27 @@ import java.util.ArrayList;
 public class Test {
 
     public static void main(String[] args) throws Exception {
+<<<<<<< HEAD
         for (int i = 0; i < 100; i++) {
             int selection = (int) Math.round(Math.random() * 10);
             System.out.println(selection);
         }
 
+=======
+        String[] arr = {"0","1","2","3","4","5"};
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i <arr.length ; i++) {
+            if (i == arr.length-1){
+                builder.append(arr[i]);
+            }
+            else {
+                builder.append(arr[i]+",");
+            }
+
+        }
+
+        System.out.println(builder.toString());
+>>>>>>> master
     }
     public boolean solution(String S, String T) {
         ArrayList<Character> listS = new ArrayList<Character>();

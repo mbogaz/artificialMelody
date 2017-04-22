@@ -31,8 +31,12 @@ public class WekaClass {
         weka.multiLayerPerception();
         //weka.tryNetwork(1);
 
+<<<<<<< HEAD
         System.out.println(
                 weka.getScore(""));
+=======
+        System.out.println(weka.getScore("26,450,34,450,31,450,26,450,36,450,33,450,29,450,36,450,26,450,34,450,31,1200,25,600,41,225,26,225,26,225,36,225,26,450,34,450,31,450,26,450,36,450,33,450,29,450,36,450,26,450,34,450,31,1200,25,1200,31,450,14,450,24,450,31,450,29,450,14,225,14,225,24,1200,25,1200,14,450,16,450,29,1200,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.75"));
+>>>>>>> master
     }
     public void clusterer(){
         try {
@@ -261,7 +265,11 @@ public class WekaClass {
         isTrainingSet.setClassIndex(isTrainingSet.numAttributes()-1);
 
             double clsLabel= mlp.classifyInstance(isTrainingSet.instance(0));
+<<<<<<< HEAD
             return clsLabel<=1 ? (clsLabel>=0 ? clsLabel : 0 ) : 1;
+=======
+            return clsLabel<=1 ? clsLabel : 1;
+>>>>>>> master
 
         }catch(Exception e){
             System.out.println("error :"+e+" arg:"+data);
