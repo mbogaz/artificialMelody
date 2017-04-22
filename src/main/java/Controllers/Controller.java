@@ -19,7 +19,7 @@ public class Controller implements Initializable {
     ArrayList<ScoredMelody> list;
     public void initialize(URL location, ResourceBundle resources) {
         list = new ArrayList<ScoredMelody>();
-        list = DBClass.getDBClass().getData();
+        list = DBClass.getDBClass().getData(0);
         totalLabel.setText("total scored \nmelody count :\n"+list.size());
 
         createArffBtn.setOnAction(new EventHandler<ActionEvent>() {

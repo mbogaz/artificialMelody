@@ -1,12 +1,21 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Test {
 
     public static void main(String[] args) throws Exception {
-        Random r = new Random();
-        for (int i=0;i<100;i++)
-            System.out.println(r.nextInt(6));
+        String[] arr = {"0","1","2","3","4","5"};
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i <arr.length ; i++) {
+            if (i == arr.length-1){
+                builder.append(arr[i]);
+            }
+            else {
+                builder.append(arr[i]+",");
+            }
+
+        }
+
+        System.out.println(builder.toString());
     }
     public boolean solution(String S, String T) {
         ArrayList<Character> listS = new ArrayList<Character>();
