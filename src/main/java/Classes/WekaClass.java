@@ -29,14 +29,10 @@ public class WekaClass {
         WekaClass weka = new WekaClass();
 
         weka.multiLayerPerception();
+        weka.getScore("deneme:d=4,o=6,b=480:1c.5,2c#5,4d5,1c#5,1c#5,1c#.5,1d.5,2e5,2d5,1e5,4f5,4f#5,1f.5,2f5,1e5,4f5,1f5,2f5,2f#5,2f#5,4f5,4e5,4f5,4e5,4e5,1d.5,1c#.5,2d5,2e5,4e5,1e.5,4e5,4f5,1e.5,1e.5,4f5,1e.5,1d5,4d5,2c#5,2c5,1c#.5,2d5,1d.5,1e.5,2e5,4e5,1d5,1c#.5,1d.5");
         //weka.tryNetwork(1);
 
-<<<<<<< HEAD
-        System.out.println(
-                weka.getScore(""));
-=======
-        System.out.println(weka.getScore("26,450,34,450,31,450,26,450,36,450,33,450,29,450,36,450,26,450,34,450,31,1200,25,600,41,225,26,225,26,225,36,225,26,450,34,450,31,450,26,450,36,450,33,450,29,450,36,450,26,450,34,450,31,1200,25,1200,31,450,14,450,24,450,31,450,29,450,14,225,14,225,24,1200,25,1200,14,450,16,450,29,1200,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.75"));
->>>>>>> master
+
     }
     public void clusterer(){
         try {
@@ -155,8 +151,11 @@ public class WekaClass {
         try{
             //Reading training arff file
             FileReader trainreader = new FileReader("file2.arff");
+            FileReader testreader = new FileReader("file.arff");
             Instances data = new Instances(trainreader);
+            Instances dataTest = new Instances(testreader);
             data.setClassIndex(data.numAttributes()-1);
+            dataTest.setClassIndex(dataTest.numAttributes()-1);
 
             String[] options = new String[2];
             options[0] = "-R";                                    // "range"
@@ -164,42 +163,33 @@ public class WekaClass {
             Remove remove = new Remove();                         // new instance of filter
             remove.setOptions(options);                           // set options
             remove.setInputFormat(data);                          // inform filter about dataset **AFTER** setting options
-            Instances train = Filter.useFilter(data, remove);   // apply filter
+            Instances inst = Filter.useFilter(data, remove);   // apply filter
+            Instances instTest = Filter.useFilter(dataTest, remove);   // apply filter
 
-            mlp = (MultilayerPerceptron) SerializationHelper.read("data.model");
 
-            /*mlp = new MultilayerPerceptron();
+            //Serialization modelleri kaydedip okumaya yarıyor
+            //mlp = (MultilayerPerceptron) SerializationHelper.read("data.model");
+
+            mlp = new MultilayerPerceptron();
             mlp.setLearningRate(0.155);
             mlp.setMomentum(0.181);
-            mlp.setTrainingTime(700);
-            int hiddenLayerLenght = Math.round(Variables.inputLenght/10)*8;
-            String hiddenArg = ""+hiddenLayerLenght;
-            //String hiddenArg = "40,20";
+            mlp.setTrainingTime(500);
+            //int hiddenLayerLenght = Math.round(Variables.inputLenght/10)*8;
+            //String hiddenArg = ""+hiddenLayerLenght;
+            String hiddenArg = "40,20";
+            //kaç hidden layer var(, sayısı +1), her layerda kaç node var
             mlp.setHiddenLayers(hiddenArg);
-            mlp.buildClassifier(train);
-            SerializationHelper.write("data.model",mlp);*/
+            mlp.buildClassifier(inst);
+            //alttaki iki satır sonuçları softmax'e alıyor [0-1] range i
+            mlp.setNormalizeAttributes(true);
+            mlp.setNormalizeNumericClass(true);
+            SerializationHelper.write("data.model",mlp);
 
 
-            Evaluation eval = new Evaluation(train);
-            eval.evaluateModel(mlp, train);
-            //eval.crossValidateModel(mlp, train, 10, new Random(1));
 
+            Evaluation eval = new Evaluation(instTest);
+            eval.evaluateModel(mlp, instTest);
             System.out.println(eval.toSummaryString()); //Summary of Training
-
-            int lenght = data.numInstances();
-            double totalErrorAbs=0,standartDev=0,diff;
-            for(int i=0;i<lenght;i++){
-
-                double actualVal = train.instance(i).classValue();
-                double predicVal =  mlp.classifyInstance(train.instance(i));
-
-                diff = Math.pow(actualVal-predicVal,2) ;
-                totalErrorAbs += Math.abs(actualVal-predicVal);
-                standartDev += diff;
-            }
-            standartDev = Math.sqrt(standartDev/lenght);
-            totalErrorAbs = totalErrorAbs /lenght;
-            System.out.println("mean error abs:"+totalErrorAbs+" std:"+standartDev);
 
 
 
@@ -235,6 +225,7 @@ public class WekaClass {
         }
     }
 
+    //sisteme göre parse edilmiş inputun kaç puan aldığını döndürür
     public double getScore(String data){
         try {
         String[] arr = data.split(",");
@@ -256,8 +247,15 @@ public class WekaClass {
         Instance pitchExample = new Instance((Variables.inputLenght*2)+1);
         Instances isTrainingSet = new Instances("Rel", fvWekaAttributes, 1);
         for(int j=0;j<Variables.inputLenght-1;j++){
+                int picth = Integer.parseInt(arr[j * 2]);
+            /*if(picth < 2){}
+            else if(picth%12<2){
+                picth = (picth%12)+12;
+            }else{
+                picth %= 12;
+            }*/
 
-                pitchExample.setValue((Attribute) fvWekaAttributes.elementAt(j * 2), Integer.parseInt(arr[j * 2]));
+                pitchExample.setValue((Attribute) fvWekaAttributes.elementAt(j * 2), picth);
                 pitchExample.setValue((Attribute) fvWekaAttributes.elementAt((j * 2) + 1), Integer.parseInt(arr[(j * 2) + 1]));
                 isTrainingSet.add(pitchExample);
 
@@ -265,11 +263,9 @@ public class WekaClass {
         isTrainingSet.setClassIndex(isTrainingSet.numAttributes()-1);
 
             double clsLabel= mlp.classifyInstance(isTrainingSet.instance(0));
-<<<<<<< HEAD
-            return clsLabel<=1 ? (clsLabel>=0 ? clsLabel : 0 ) : 1;
-=======
-            return clsLabel<=1 ? clsLabel : 1;
->>>>>>> master
+
+            return clsLabel;
+
 
         }catch(Exception e){
             System.out.println("error :"+e+" arg:"+data);
@@ -278,8 +274,8 @@ public class WekaClass {
 
     }
 
-    public void tryNetwork(int opt,int testLenght){
-
+    public void tryNetwork(int opt){
+        int testLenght = Variables.testLenght;
         String[] results = new String[testLenght];
 
         Random r = new Random();

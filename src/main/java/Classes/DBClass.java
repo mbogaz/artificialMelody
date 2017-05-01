@@ -101,6 +101,7 @@ public class DBClass {
     }
 
     public String listToString(ArrayList<ScoredMelody> list,boolean forGeneric) {
+
         String result="";
         for (ScoredMelody sm : list){
             //System.out.println(sm.getContent());
@@ -141,6 +142,41 @@ public class DBClass {
         }
         return result;
     }
+    public String createRandomString(WekaClass wk){
+
+        int testLenght = Variables.testLenght;
+        String res = "";
+        for(int i=0;i<testLenght;i++){
+            int b = (int) ((Math.random()*100)+100);
+            String text = "";
+            for(int j=0;j<Variables.inputLenght;j++){
+                int d = (int) (Math.random()*6);
+                int bb=0;
+                switch (d){
+                    case 0: bb=(60000/b)*4;break;
+                    case 1: bb=(60000/b)*2;break;
+                    case 2: bb=(60000/b);break;
+                    case 3: bb=(60000/b)/2;break;
+                    case 4: bb=(60000/b)/4;break;
+                    case 5: bb=(60000/b)/8;break;
+                }
+                int resultA = (int) (Math.random()*50);
+                int rand = (int) (Math.random()*4);
+                if(rand==0) {
+                    bb = bb * 3 / 2;
+                }
+                text+= resultA+","+bb+",";
+
+            }
+            text+="?";
+            if(wk.getScore(text)> 0.4){
+                i--;
+            }else
+                res += text+"\n";
+        }
+
+        return res;
+    }
 
     public int parseNode(String text,int d,int o){
         int val = 0;
@@ -154,35 +190,40 @@ public class DBClass {
         text = text.replaceAll("e#","e");
         if(text.contains("p")){
             val = getEncodedValue(text,"p",1,d,o);
-        }else if(text.contains("a#")){
-            val = getEncodedValue(text,"a#",3,d,o);
-        }else if(text.contains("a")){
-            val = getEncodedValue(text,"a",2,d,o);
-        }else if(text.contains("b")){
-            val = getEncodedValue(text,"b",4,d,o);
         }else if(text.contains("c#")){
-            val = getEncodedValue(text,"c#",6,d,o);
+            val = getEncodedValue(text,"c#",3,d,o);
         }else if(text.contains("c")){
-            val = getEncodedValue(text,"c",5,d,o);
+            val = getEncodedValue(text,"c",2,d,o);
         }else if(text.contains("d#")){
-            val = getEncodedValue(text,"d#",8,d,o);
+            val = getEncodedValue(text,"d#",5,d,o);
         }else if(text.contains("d")){
-            val = getEncodedValue(text,"d",7,d,o);
+            val = getEncodedValue(text,"d",4,d,o);
         }else if(text.contains("e")){
-            val = getEncodedValue(text,"e",9,d,o);
+            val = getEncodedValue(text,"e",6,d,o);
         }else if(text.contains("f#")){
-            val = getEncodedValue(text,"f#",11,d,o);
+            val = getEncodedValue(text,"f#",8,d,o);
         }else if(text.contains("f")){
-            val = getEncodedValue(text,"f",10,d,o);
+            val = getEncodedValue(text,"f",7,d,o);
         }else if(text.contains("g#")){
-            val = getEncodedValue(text,"g#",13,d,o);
+            val = getEncodedValue(text,"g#",10,d,o);
         }else if(text.contains("g")){
-            val = getEncodedValue(text,"g",12,d,o);
+            val = getEncodedValue(text,"g",9,d,o);
+        }else if(text.contains("a#")){
+            val = getEncodedValue(text,"a#",12,d,o);
+        }else if(text.contains("a")){
+            val = getEncodedValue(text,"a",11,d,o);
+        }else if(text.contains("b")){
+            val = getEncodedValue(text,"b",13,d,o);
         }
         return val;
     }
-    public int getEncodedValue(String text,String key,int mult,int d,int o){//pitch değerini döndürür
+    public int getEncodedValue(String text,String key,int mult,int d,int o){
+        //0 la 50 arası değer döndürür.
+        //mult notanın katsayısı(octav ile genişletiliyor)
+        //d ve o rtttl nin default değerleri
+        //pitch değerini döndürür
         //duration değeri global bb variableında
+        //return mult;
         if(text.contains("_")){text = text.replace("_","#");key=key+"#";}
         boolean isDot = false;
         if(text.contains(".")){isDot = true;text = text.replace(".","");}
