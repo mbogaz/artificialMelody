@@ -10,7 +10,6 @@ import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 import weka.core.converters.ConverterUtils;
-import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 
 import java.io.BufferedReader;
@@ -29,7 +28,6 @@ public class WekaClass {
         WekaClass weka = new WekaClass();
 
         weka.multiLayerPerception();
-        weka.getScore("deneme:d=4,o=6,b=480:1c.5,2c#5,4d5,1c#5,1c#5,1c#.5,1d.5,2e5,2d5,1e5,4f5,4f#5,1f.5,2f5,1e5,4f5,1f5,2f5,2f#5,2f#5,4f5,4e5,4f5,4e5,4e5,1d.5,1c#.5,2d5,2e5,4e5,1e.5,4e5,4f5,1e.5,1e.5,4f5,1e.5,1d5,4d5,2c#5,2c5,1c#.5,2d5,1d.5,1e.5,2e5,4e5,1d5,1c#.5,1d.5");
         //weka.tryNetwork(1);
 
 
@@ -151,57 +149,54 @@ public class WekaClass {
         try{
             //Reading training arff file
             FileReader trainreader = new FileReader("file2.arff");
-            FileReader testreader = new FileReader("file.arff");
             Instances data = new Instances(trainreader);
-            Instances dataTest = new Instances(testreader);
             data.setClassIndex(data.numAttributes()-1);
-            dataTest.setClassIndex(dataTest.numAttributes()-1);
+            //data.randomize(new java.util.Random(0));
 
             String[] options = new String[2];
-            options[0] = "-R";                                    // "range"
-            options[1] = "1";                                     // first attribute
-            Remove remove = new Remove();                         // new instance of filter
-            remove.setOptions(options);                           // set options
-            remove.setInputFormat(data);                          // inform filter about dataset **AFTER** setting options
-            Instances inst = Filter.useFilter(data, remove);   // apply filter
-            Instances instTest = Filter.useFilter(dataTest, remove);   // apply filter
+            options[0] = "-R";                      // "range"
+            options[1] = "1";                       // first attribute
+            Remove remove = new Remove();           // new instance of filter
+            remove.setOptions(options);             // set options
+            remove.setInputFormat(data);            // inform filter about dataset **AFTER** setting options
 
+
+
+            double testPercent = 0.3;
+            int trainSize = (int) Math.round(data.numInstances() * testPercent);
+            int testSize = data.numInstances() - trainSize;
+            Instances inst = new Instances(data, 0, trainSize);
+            inst.setClassIndex(inst.numAttributes()-1);
+            Instances instTest = new Instances(data, trainSize, testSize);
+            instTest.setClassIndex(inst.numAttributes()-1);
 
             //Serialization modelleri kaydedip okumaya yarıyor
-            //mlp = (MultilayerPerceptron) SerializationHelper.read("data.model");
-
-            mlp = new MultilayerPerceptron();
-            mlp.setLearningRate(0.155);
-            mlp.setMomentum(0.181);
-            mlp.setTrainingTime(500);
-            //int hiddenLayerLenght = Math.round(Variables.inputLenght/10)*8;
-            //String hiddenArg = ""+hiddenLayerLenght;
-            String hiddenArg = "40,20";
-            //kaç hidden layer var(, sayısı +1), her layerda kaç node var
-            mlp.setHiddenLayers(hiddenArg);
-            mlp.buildClassifier(inst);
-            //alttaki iki satır sonuçları softmax'e alıyor [0-1] range i
-            mlp.setNormalizeAttributes(true);
-            mlp.setNormalizeNumericClass(true);
-            SerializationHelper.write("data.model",mlp);
-
-
-
-            Evaluation eval = new Evaluation(instTest);
-            eval.evaluateModel(mlp, instTest);
-            System.out.println(eval.toSummaryString()); //Summary of Training
+            mlp = (MultilayerPerceptron) SerializationHelper.read("data.model");
+                /*mlp = new MultilayerPerceptron();
+                mlp.setLearningRate(0.45);
+                mlp.setMomentum(0.188);
+                mlp.setTrainingTime(525);
+                //int hiddenLayerLenght = Math.round(Variables.inputLenght/10)*8;
+                //String hiddenArg = ""+hiddenLayerLenght;
+                //String hiddenArg = "40,20";
+                String hiddenArg = "50,15,5";
+                //kaç hidden layer var(, sayısı +1), her layerda kaç node var
+                mlp.setHiddenLayers(hiddenArg);
+                mlp.buildClassifier(inst);
+                //alttaki iki satır sonuçları softmax'e alıyor [0-1] range i
+                mlp.setNormalizeAttributes(true);
+                mlp.setNormalizeNumericClass(true);
+                SerializationHelper.write("data.model", mlp);*/
 
 
+                Evaluation eval = new Evaluation(instTest);
+                eval.evaluateModel(mlp, instTest);
+                //System.out.println(eval.toSummaryString()); //Summary of Training
+                System.out.println("lr:0.45 m:0.188  epochs:525 " +
+                        "hl:50/15/5  mae:"+eval.meanAbsoluteError()+"  mse:"+eval.rootMeanSquaredError());
 
 
-            /*for (i = 0; i < train.numInstances(); i++) {
-                double clsLabel = mlp.classifyInstance(train.instance(i));
 
-                if(Math.abs(train.instance(i).classValue()-clsLabel)>=0.6  ){
-                    System.out.println(data.instance(i).value(0)+" cls:"+new DecimalFormat("##.##").format(clsLabel)+" +:"
-                            +data.instance(i).value(data.numAttributes()-1));
-                }
-            }*/
         }catch (Exception e){
             System.out.println("error e:"+e);
         }
