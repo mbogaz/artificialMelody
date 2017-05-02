@@ -7,7 +7,7 @@ mae = avg(abs(sfp(i)-sfn(i))
  mse = sqrt(tot(pow((sfp(i)-sfn(i)),2)))
 
 lr ->learnin rate
-m  ->m
+m  ->momentum
 hl ->hidden layer('/' for spliting levels "40/20 means 40 nodes in first hidden layer and 20 in second")
 mae->mae
 msq->mean squarred error
