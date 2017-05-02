@@ -9,7 +9,7 @@ mae = avg(abs(sfp(i)-sfn(i))
 lr ->learnin rate
 m  ->momentum
 hl ->hidden layer('/' for spliting levels "40/20 means 40 nodes in first hidden layer and 20 in second")
-mae->mae
+mae->mean absolute error
 msq->mean squarred error
 
 epochs ***
